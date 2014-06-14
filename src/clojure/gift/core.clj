@@ -13,12 +13,21 @@
 
 Usage: (make-gif \"move.gif\" [\"person1.jpg\" \"person2.jpg\"])
 
+Additional properties:\n
+  :delay - time in milliseconds between frames (default 200)
+
 "
-  [output-path images]
+  [output-path images
+   & {:keys [delay]
+      :or {delay 200}}]
   (let [encoder (-> (doto (gift.AnimatedGifEncoder. )
                       (.start output-path)
-                      (.setDelay 200) ;; milliseconds
-                      (.setRepeat 0)))]
+                      (.setRepeat 0)
+                      (.setDelay delay) ;; milliseconds
+                      ))]
     (doseq [i images]
       (.addFrame encoder (read-image i)))
     (.finish encoder)))
+
+;; TODO iterations does not work?
+;; TODO gif quality
