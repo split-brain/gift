@@ -1,10 +1,17 @@
 # gift
 
-A Clojure library designed to ... well, that part is up to you.
+A minimal clojure library to convert set of images to gif file.
+Backed by [AnimatedGifEncoder](http://www.java2s.com/Code/Java/2D-Graphics-GUI/AnimatedGifEncoder.htm)
 
 ## Usage
 
-FIXME
+``` clojure
+(:use [gift.core])
+```
+
+``` clojure
+(make-gif "person.gif" ["file1.jpg" "file2.jpg" "file3.jpg"])
+```
 
 ## License
 
