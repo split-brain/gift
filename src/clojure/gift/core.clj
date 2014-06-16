@@ -14,20 +14,30 @@
 Usage: (make-gif \"move.gif\" [\"person1.jpg\" \"person2.jpg\"])
 
 Additional properties:\n
-  :delay - time in milliseconds between frames (default 200)
+  :delay      - time in milliseconds between frames (default 200)
+  :iterations - number of iterations (0 is for infinity)
+  :quality    - quality of color quantization (should be > 0)
+  :width      - width of resulting gif (if not provided the size of first frame is used)
+  :height     - height of resulting gif (if not provided the size of first frame is used)
 
 "
   [output-path images
-   & {:keys [delay]
-      :or {delay 200}}]
-  (let [encoder (-> (doto (gift.AnimatedGifEncoder. )
-                      (.start output-path)
-                      (.setRepeat 0)
-                      (.setDelay delay) ;; milliseconds
-                      ))]
+   & {:keys [delay
+             iterations
+             quality
+             width
+             height]
+      :or {delay 200
+           iterations 0
+           quality 10}}]
+  (let [encoder (doto (gift.AnimatedGifEncoder.)
+                  (.start output-path)
+                  (.setRepeat iterations)
+                  (.setQuality quality) ;; less is better
+                  (.setDelay delay) ;; milliseconds
+                  )]
+    (when (and width height)
+      (.setSize encoder width height))
     (doseq [i images]
       (.addFrame encoder (read-image i)))
     (.finish encoder)))
-
-;; TODO iterations does not work?
-;; TODO gif quality
