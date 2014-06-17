@@ -19,7 +19,7 @@ Additional properties:\n
   :quality            - quality of color quantization (should be > 0)
   :width              - width of resulting gif (if not provided the size of first frame is used)
   :height             - height of resulting gif (if not provided the size of first frame is used)
-  :transparent-color  - vector [r g b a] which defines color that will be transparent in resulting gif (default is [0 0 0 255])
+  :transparent-color  - vector [r g b a] which defines color that will be transparent in resulting gif. nil defines no transparent color (which is default)
 
 "
   [output-path images
@@ -32,13 +32,14 @@ Additional properties:\n
       :or {delay 200
            iterations 0
            quality 10
-           transparent-color [0 0 0 255]}}]
+           transparent-color nil}}]
   (let [encoder (doto (gift.AnimatedGifEncoder.)
                   (.start output-path)
                   (.setRepeat iterations)
                   (.setQuality quality) ;; less is better
                   (.setDelay delay) ;; milliseconds
-                  (.setTransparent (when transparent-color
+                  (.setTransparent (if (nil? transparent-color)
+                                     transparent-color
                                      (apply #(java.awt.Color. %1 %2 %3 %4) transparent-color))))]
     (when (and width height)
       (.setSize encoder width height))
