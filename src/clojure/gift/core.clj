@@ -1,23 +1,15 @@
 (ns gift.core)
 
 (defn- read-image
-  "Read image form file-path to BufferedImage"
+  "Read image from file-path to Image"
   [image-path]  
-  (-> image-path
-      (java.io.File.)
-      (java.io.FileInputStream.)
-      (javax.imageio.ImageIO/read)))
+  (gift.Image/getImageFromFile image-path))
 
 (defn- scale-image
   "Set size of [image] to be [w]idth x [h]eight"
   [image w h]
-  (let [resized (java.awt.image.BufferedImage. w h (.getType image))]
-    (doto (.createGraphics resized)
-      (.setRenderingHint java.awt.RenderingHints/KEY_INTERPOLATION
-                         java.awt.RenderingHints/VALUE_INTERPOLATION_BILINEAR)
-      (.drawImage image 0 0 w h 0 0 (.getWidth image) (.getHeight image) nil)
-      (.dispose))
-    resized))
+  (.scale image w h)
+  image)
 
 (defn make-gif
   "Produce gif from set of files.
@@ -52,7 +44,7 @@ Additional properties:\n
                   (.setQuality quality) ;; less is better
                   (.setDelay delay) ;; milliseconds
                   (.setTransparent (and transparent-color
-                                        (apply #(java.awt.Color. %1 %2 %3) transparent-color))))]
+                                        (apply #(gift.Color. %1 %2 %3) transparent-color))))]
     (doseq [i images]
       (.addFrame encoder
                  (let [image (read-image i)]

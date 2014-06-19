@@ -1,8 +1,6 @@
 package gift;
 
 import java.io.*;
-import java.awt.*;
-import java.awt.image.*;
 
 /**
  * Class AnimatedGifEncoder - Encodes a GIF file consisting of one or
@@ -36,7 +34,7 @@ public class AnimatedGifEncoder {
 	protected int delay = 0; // frame delay (hundredths)
 	protected boolean started = false; // ready to output frames
 	protected OutputStream out;
-	protected BufferedImage image; // current frame
+	protected Image image; // current frame
 	protected byte[] pixels; // BGR byte array from frame
 	protected byte[] indexedPixels; // converted frame indexed to palette
 	protected int colorDepth; // number of bit planes
@@ -108,10 +106,10 @@ public class AnimatedGifEncoder {
 	 * frames.  If <code>setSize</code> was not invoked, the size of the
 	 * first image is used for all subsequent frames.
 	 *
-	 * @param im BufferedImage containing frame to write.
+	 * @param im Image containing frame to write.
 	 * @return true if successful.
 	 */
-	public boolean addFrame(BufferedImage im) {
+	public boolean addFrame(Image im) {
 		if ((im == null) || !started) {
 			return false;
 		}
@@ -330,18 +328,12 @@ public class AnimatedGifEncoder {
 	protected void getImagePixels() {
 		int w = image.getWidth();
 		int h = image.getHeight();
-		int type = image.getType();
-		if ((w != width)
-			|| (h != height)
-			|| (type != BufferedImage.TYPE_3BYTE_BGR)) {
-			// create new image with right size/format
-			BufferedImage temp =
-				new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-			Graphics2D g = temp.createGraphics();
-			g.drawImage(image, 0, 0, null);
-			image = temp;
-		}
-		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        if ((w != width)
+            || (h != height)
+            || !image.hasCorrectType()) {
+            image.correct(width, height);
+        }
+		pixels = image.getData();
 	}
 	
 	/**

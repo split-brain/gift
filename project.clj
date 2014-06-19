@@ -6,5 +6,5 @@
   :dependencies [[org.clojure/clojure "1.5.1"]]
 
   :source-paths ["src/clojure"]
-  :java-source-paths ["src/java"]
+  :java-source-paths ["src/java" "src/platform-specific/desktop/java/"]
 )
