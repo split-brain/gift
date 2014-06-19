@@ -8,6 +8,17 @@
       (java.io.FileInputStream.)
       (javax.imageio.ImageIO/read)))
 
+(defn- scale-image
+  "Set size of [image] to be [w]idth x [h]eight"
+  [image w h]
+  (let [resized (java.awt.image.BufferedImage. w h (.getType image))]
+    (doto (.createGraphics resized)
+      (.setRenderingHint java.awt.RenderingHints/KEY_INTERPOLATION
+                         java.awt.RenderingHints/VALUE_INTERPOLATION_BILINEAR)
+      (.drawImage image 0 0 w h 0 0 (.getWidth image) (.getHeight image) nil)
+      (.dispose))
+    resized))
+
 (defn make-gif
   "Produce gif from set of files.
 
@@ -41,8 +52,10 @@ Additional properties:\n
                   (.setTransparent (if (nil? transparent-color)
                                      transparent-color
                                      (apply #(java.awt.Color. %1 %2 %3 %4) transparent-color))))]
-    (when (and width height)
-      (.setSize encoder width height))
     (doseq [i images]
-      (.addFrame encoder (read-image i)))
+      (.addFrame encoder
+                 (let [image (read-image i)]
+                   (if (and width height)
+                     (scale-image image width height)
+                     image))))
     (.finish encoder)))
