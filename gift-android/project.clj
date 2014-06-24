@@ -1,5 +1,5 @@
-(defproject gift-android "0.1.0-SNAPSHOT"
-  :description "Create gif files"
+(defproject gift/gift-android "0.1.0-SNAPSHOT"
+  :description "Create gif files (version for android platform)"
   :url "https://github.com/split-brain/gift"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
