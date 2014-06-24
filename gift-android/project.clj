@@ -5,10 +5,13 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[lein-parent "0.2.0"]]
 
-  :dependencies [[com.google.android/android "4.0.1.2"]]
+  :dependencies [[org.clojure-android/clojure "1.6.0-RC1" :use-resources true]]
 
   :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
-  :java-source-paths ["src/java/"] 
+  :java-source-paths ["src/java"] 
 
-  :parent-project  {:path "../project.clj"
-                    :inherit  [:dependencies :aot :source-paths :java-source-paths]})
+  :parent-project {:path "../project.clj"
+                   :inherit  [:aot :source-paths :java-source-paths]}
+
+  :android {:library true
+            :target-version "14"})
