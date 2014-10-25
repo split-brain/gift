@@ -1,4 +1,4 @@
-(defproject gift/gift-desktop "0.1.0-SNAPSHOT"
+(defproject gift/gift-desktop "0.1.0"
   :description "Create gif files (version for desktop platform)"
   :url "https://github.com/split-brain/gift"
   :license {:name "Eclipse Public License"
